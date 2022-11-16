@@ -48,7 +48,7 @@ const Login = (props: LoginProps) => {
                 <Close sx={{color: "#010101"}}/>
               </IconButton>
             </div>
-            <h1>Create Account</h1>
+            <Typography variant='h4' sx={{color: "#010101"}}>Create Account</Typography>
             <div className="social-container">
               <IconButton sx={socialIconStyle} >
                 <FacebookIcon 
@@ -87,7 +87,7 @@ const Login = (props: LoginProps) => {
                   <Close sx={{color: "#010101"}}/>
                 </IconButton>
               </div>
-            <h1>Sign in</h1>
+              <Typography variant='h4' sx={{color: "#010101"}}>Sign in</Typography>
             <div className="social-container">
               <IconButton sx={socialIconStyle} >
                 <FacebookIcon 

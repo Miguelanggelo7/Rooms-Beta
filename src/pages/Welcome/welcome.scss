@@ -1,0 +1,106 @@
+$breakpoint: 430px;
+$breakpoint2: 650px;
+$breakpoint3: 310px;
+
+.welcome-banner{
+    background: rgb(104,43,215);
+    background: linear-gradient(90deg, rgba(104,43,215,1) 0%, rgba(163,124,240,1) 100%);
+    height: 100vh;
+}
+
+.custom-shape-divider-bottom-1668622632 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1668622632 svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 93px;
+}
+
+.custom-shape-divider-bottom-1668622632 .shape-fill {
+    fill: #FFFFFF;
+}
+
+.logo-banner {
+    width: 200pt;
+    margin: 20pt;
+}
+
+.button-banner {
+    border-radius: 20px;
+    position: absolute;
+    top: 0;
+    margin-bottom: 45px;
+	border: 2px solid #F2eee3;
+	background-color: #fff;
+	color: #010101;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 45px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+    cursor: pointer;
+    right: 0;
+    margin: 30pt;
+
+    &:hover {
+        background-color: #fff;
+        box-shadow: 0px 15px 20px #ffffff40;
+        color: #010101;
+        transform: translateY(-7px);
+      }
+
+}
+
+@media (max-width: $breakpoint2) {
+
+    .button-banner {
+		margin: 20pt;
+	}
+
+	.logo-banner {
+		width: 150pt;
+	}
+
+}
+
+@media (max-width: $breakpoint) {
+
+	.button-banner {
+		margin-top: 80pt;
+        left: 0;
+        margin-left: 60pt;
+        margin-right: 60pt;
+	}
+
+    .logo-banner{
+        display: block;
+        margin: auto;
+        padding-top: 20pt;
+    }
+
+}
+
+@media (max-width: $breakpoint3) {
+
+    .button-banner {
+		margin-top: 80pt;
+        margin-left: 20pt;
+        margin-right: 20pt;
+	}
+
+	.logo-banner {
+		display: block;
+        margin: auto;
+        padding-top: 20pt;
+	}
+
+}

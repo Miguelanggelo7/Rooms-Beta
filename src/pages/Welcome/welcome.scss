@@ -67,39 +67,20 @@ $breakpoint4: 1200px;
 
 }
 
-.text-and-image-banner{
-    display: inline-flex;
+.text-banner{
     margin: auto;
+    max-width: 800pt;
     width: 100%;
-}
-
-.welcome-banner-text, .welcome-meet{
-    width: 50%;
-    margin: auto;
-    padding: 20pt;
+    padding-top: 100pt;
+    z-index: 10;
     text-align: center;
-}
-
-.welcome-banner-text{
-    max-width: 1000pt;
-}
-
-.welcome-meet{
-    max-width: 450pt;
-}
-
-.title-banner{
-    font-size: 45pt;
-    color: #fff;
-    font-weight: 400;
-    text-transform: uppercase;
-
 }
 
 .subtitle-banner{
     font-size: 25pt;
     color: #fff;
     font-weight: 300;
+    padding: 20pt;
 }
 
 .block1, .block2 {
@@ -110,12 +91,18 @@ $breakpoint4: 1200px;
     background-color: #f6f6f6;
 }
 
-@media (max-width: $breakpoint4) {
+#myVideo {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    object-fit: cover;
+    height: 100%;
+    filter: brightness(0.4);
+  }
+  
 
-    .title-banner{
-        font-size: 30pt;
-    
-    }
+@media (max-width: $breakpoint4) {
     
     .subtitle-banner{
         font-size: 20pt;
@@ -134,26 +121,8 @@ $breakpoint4: 1200px;
         margin-top: 25pt;
 	}
 
-    .text-and-image-banner{
-        display: block;
-    }
-
-    .welcome-meet{
-        width: 100%;
-        margin-bottom: 50pt;
-        margin-top: -30pt;
-    }
-
-    .welcome-banner-text{
-        width: 100%;
-    }
-
     .subtitle-banner{
         margin-top: -20pt;
-    }
-
-    .text-and-image-banner{
-        margin-top: 30pt;
     }
 
 }
@@ -173,22 +142,6 @@ $breakpoint4: 1200px;
         left: 0;
         right: 0;
         padding-top: 20pt;
-    }
-
-    .welcome-meet{
-        display: none;
-    }
-
-    .text-and-image-banner{
-        margin-top: 80pt;
-    }
-
-    .title-banner{
-        font-size: 25pt;
-        width: 100%;
-        overflow: hidden;
-        word-wrap: break-word;
-        margin-top: 50pt;
     }
 
     .subtitle-banner{

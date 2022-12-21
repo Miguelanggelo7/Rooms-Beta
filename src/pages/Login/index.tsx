@@ -6,13 +6,44 @@ import FacebookIcon from '@mui/icons-material/FacebookOutlined';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GoogleIcon from '@mui/icons-material/Google';
 import { motion } from "framer-motion";
+import { GoogleAuth, logIn, signUp } from '../../api/auth';
+import { useSnackbar } from "notistack";
+import { auth } from '../../api/config';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export interface LoginProps {
   open: boolean;
   setOpen: (open:boolean) => void;
 }
 
+interface ValuesSignUp {
+  name: string;
+  email: string;
+  password: string;
+}
+
+const signUpData = {
+  name: "",
+  email: "",
+  password: "",
+};
+
+interface ValuesLogIn {
+  email: string;
+  password: string;
+}
+
+const logInData = {
+  email: "",
+  password: "",
+};
+
 const Login = (props: LoginProps) => {
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [userSignUp, setUserSignUp] = useState<ValuesSignUp>(signUpData);
+  const [userLogIn, setUserLogIn] = useState<ValuesLogIn>(logInData);
 
   const { setOpen, open } = props;
 
@@ -36,13 +67,27 @@ const Login = (props: LoginProps) => {
     setOpen(false);
   };
 
+  const handleChangeSignUp = (name: string, value: string) => {
+    setUserSignUp({ ...userSignUp, [name]: value });
+  };
+
+  const onSubmitSignUp = async (user: ValuesSignUp) => {
+    const error = await signUp(user);
+
+    if (error) {
+      return enqueueSnackbar(error, { variant: "error" });
+    }
+
+    enqueueSnackbar("¡Bienvenido a Rooms!", { variant: "success" });
+  };
+
   return (
     <Dialog fullScreen={fullScreen} onClose={handleClose} open={open} PaperProps={{
       style : !fullScreen ? { borderRadius: '10px', padding: '20px', minWidth: '700pt' } : { padding: '0' }
     }}>
       <div className={`container${isContainerActive ? " right-panel-active" : ""}`} id="container">
         <div className="form-container sign-up-container">
-          <form action="#">
+          <div className='form'>
             <div className='container-close-overlay-right'>
               <IconButton onClick={handleClose}>
                 <Close sx={{color: "#010101"}}/>
@@ -50,38 +95,37 @@ const Login = (props: LoginProps) => {
             </div>
             <Typography variant='h4' sx={{color: "#010101"}}>Create Account</Typography>
             <div className="social-container">
-              <IconButton sx={socialIconStyle} >
+              {/* <IconButton sx={socialIconStyle} >
                 <FacebookIcon 
                   sx={{color: "#3b5998"}}
                 />
+              </IconButton> */}
+              <IconButton sx={socialIconStyle} onClick={GoogleAuth}>
+                <img style={{width: '20pt'}} src={"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png"}/>
               </IconButton>
-              <IconButton sx={socialIconStyle} >
-                <GoogleIcon 
-                  sx={{color: "#ea4335"}}
-                />
-              </IconButton>
-              <IconButton sx={socialIconStyle} >
+              {/* <IconButton sx={socialIconStyle} >
                 <TwitterIcon 
                   sx={{color: "#00acee"}}
                 />
-              </IconButton> 
+              </IconButton>  */}
             </div>
             <Typography>or use your email for registration</Typography>
-            <TextField placeholder="Name" name="name" fullWidth sx={inputStyle}/>
-            <TextField placeholder="Email" name="email" type="email" fullWidth sx={inputStyle}/>
-            <TextField placeholder="Password" name="password" type="password" fullWidth sx={inputStyle}/>
+            <TextField onChange={(e) => handleChangeSignUp("name", e.target.value)} placeholder="Name" name="name" fullWidth sx={inputStyle}/>
+            <TextField onChange={(e) => handleChangeSignUp("email", e.target.value)} placeholder="Email" name="email" type="email" fullWidth sx={inputStyle}/>
+            <TextField onChange={(e) => handleChangeSignUp("password", e.target.value)} placeholder="Password" name="password" type="password" fullWidth sx={inputStyle}/>
             <a className='sign-up-link' onClick={() => setIsContainerActive(false)}>Already have an account? Sign in here</a>
             <motion.button 
               className="button-login" 
               whileHover={{scale: 1.05, backgroundColor: '#682bd7', color: "#fff"}}
               whileTap={{scale: 0.95}}
+              onClick={() => onSubmitSignUp(userSignUp)}
             >
               Sign Up
             </motion.button>
-          </form>
+          </div>
         </div>
         <div className="form-container sign-in-container">
-          <form action="#">
+          <div className='form' >
             <div className='container-close-overlay-left'>
                 <IconButton onClick={handleClose}>
                   <Close sx={{color: "#010101"}}/>
@@ -89,21 +133,19 @@ const Login = (props: LoginProps) => {
               </div>
               <Typography variant='h4' sx={{color: "#010101"}}>Sign in</Typography>
             <div className="social-container">
-              <IconButton sx={socialIconStyle} >
+              {/* <IconButton sx={socialIconStyle} >
                 <FacebookIcon 
                   sx={{color: "#3b5998"}}
                 />
+              </IconButton> */}
+              <IconButton sx={socialIconStyle} onClick={GoogleAuth}>
+                <img style={{width: '20pt'}} src={"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png"}/>
               </IconButton>
-              <IconButton sx={socialIconStyle} >
-                <GoogleIcon 
-                  sx={{color: "#ea4335"}}
-                />
-              </IconButton>
-              <IconButton sx={socialIconStyle} >
+              {/* <IconButton sx={socialIconStyle} >
                 <TwitterIcon 
                   sx={{color: "#00acee"}}
                 />
-              </IconButton> 
+              </IconButton>  */}
             </div>
             <Typography>or use your account</Typography>
             <TextField placeholder="Email" name="email" type="email" fullWidth sx={inputStyle}/>
@@ -116,7 +158,7 @@ const Login = (props: LoginProps) => {
             >
               Sign In
             </motion.button>
-          </form>
+          </div>
         </div>
         <div className="overlay-container">
           <div className="overlay">

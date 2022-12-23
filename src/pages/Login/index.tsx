@@ -71,6 +71,10 @@ const Login = (props: LoginProps) => {
     setUserSignUp({ ...userSignUp, [name]: value });
   };
 
+  const handleChangeLogIn = (name: string, value: string) => {
+    setUserLogIn({ ...userLogIn, [name]: value });
+  };
+
   const onSubmitSignUp = async (user: ValuesSignUp) => {
     const error = await signUp(user);
 
@@ -80,6 +84,16 @@ const Login = (props: LoginProps) => {
 
     enqueueSnackbar("¡Bienvenido a Rooms!", { variant: "success" });
   };
+
+  const onSubmitLogIn = async (user: ValuesLogIn) => {
+    const error = await logIn(user);
+
+    if (error) {
+      return enqueueSnackbar(error, { variant: "error" });
+    }
+
+    enqueueSnackbar("¡Bienvenido de vuelta!", { variant: "success" });
+  }
 
   return (
     <Dialog fullScreen={fullScreen} onClose={handleClose} open={open} PaperProps={{
@@ -148,13 +162,14 @@ const Login = (props: LoginProps) => {
               </IconButton>  */}
             </div>
             <Typography>or use your account</Typography>
-            <TextField placeholder="Email" name="email" type="email" fullWidth sx={inputStyle}/>
-            <TextField placeholder="Password" name="password" type="password" fullWidth sx={inputStyle}/>
+            <TextField onChange={(e) => handleChangeLogIn("email", e.target.value)} placeholder="Email" name="email" type="email" fullWidth sx={inputStyle}/>
+            <TextField onChange={(e) => handleChangeLogIn("password", e.target.value)} placeholder="Password" name="password" type="password" fullWidth sx={inputStyle}/>
             <a className='sign-up-link' onClick={() => setIsContainerActive(true)}>Dont have an account? Sign up here</a>
             <motion.button 
               className="button-login" 
               whileHover={{scale: 1.05, backgroundColor: '#682bd7', color: "#fff"}}
               whileTap={{scale: 0.95}}
+              onClick={() => onSubmitLogIn(userLogIn)}
             >
               Sign In
             </motion.button>

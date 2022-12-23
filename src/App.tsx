@@ -5,13 +5,13 @@ import Auth from "./components/Auth";
 import UnAuth from "./components/UnAuth";
 import { UserProvider } from "./hooks/useUser";
 import { signOut } from "./api/auth";
+import Home from './pages/Home';
 
 const App = (): JSX.Element => {
 
   return (
     <UserProvider>
       <Routes>
-        <Route path="/" element={<Navigate to="welcome" replace />} />
         <Route
           element={
             <UnAuth>
@@ -28,7 +28,7 @@ const App = (): JSX.Element => {
               </Auth>
             }
           >
-            <Route path="home" element={<button onClick={signOut}>salir</button>} />
+            <Route path="/" element={<Home/>} />
           </Route>
       </Routes>
     </UserProvider>

@@ -8,8 +8,9 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
-import { auth, db } from "./config";
+import { auth, db, storage } from "./config";
 import { User } from "../types";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 interface SignUpUserData {
   name: string;
@@ -18,7 +19,6 @@ interface SignUpUserData {
 }
 
 interface LogInUserData {
-  name: string;
   email: string;
   password: string;
 }
@@ -76,7 +76,15 @@ export const logIn = async ({ email, password }: LogInUserData) => {
     let errorMessage = "Error desconocido";
 
     if (error instanceof FirebaseError) {
+      console.log(error.code)
       switch (error.code) {
+        case AuthErrorCodes.INVALID_EMAIL:
+        case "auth/missing-email":
+          errorMessage = "Email invalido";
+          break;
+        case AuthErrorCodes.INTERNAL_ERROR:
+          errorMessage = "Ingrese su contraseña";
+          break;
         case AuthErrorCodes.USER_DELETED:
         case AuthErrorCodes.INVALID_PASSWORD:
           errorMessage = "Email o contraseña incorrectos";
@@ -90,6 +98,28 @@ export const logIn = async ({ email, password }: LogInUserData) => {
       }
     }
     return errorMessage;
+  }
+};
+
+export const updateUser = async (id: string, field: any) => {
+  try {
+    const userRef = doc(db, "users", id);
+    await updateDoc(userRef, field);
+  } catch (error) {
+    return error;
+  }
+};
+
+const uploadFiles = async (uid: any, files: any) => {
+  try {
+    const imageRef = ref(storage, `users/${uid}`);
+    const resUpload = await uploadBytes(imageRef, files);
+    const url = await getDownloadURL(resUpload.ref);
+    await updateUser(uid, { image: url });
+
+    return url;
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -110,11 +140,12 @@ export const getUser = async (id: string) => {
   }
 };
 
-export const GoogleUser = async (userData: any, uid: string) => {
+export const GoogleUser = async (userData: any, uid: string, photo: any) => {
   try {
     const user = await getUser(uid);
     if (!user) {
       await setDoc(doc(db, "users", uid), userData);
+      await updateUser(uid, { image: photo });
     }
   } catch(error) {
     return null;
@@ -136,7 +167,7 @@ export const GoogleAuth = async () => {
           email: credentials.user.email!,
         };
 
-        GoogleUser(userData, user.uid)
+        GoogleUser(userData, user.uid, user.photoURL)
 
       }
     });

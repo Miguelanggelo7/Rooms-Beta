@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import './welcome.scss';
 import logo from '../../assets/roomslogo.png';
 import banVideo from '../../assets/bannerVideo.mp4';
-import { Fade, TextField } from '@mui/material';
+import { Fade } from '@mui/material';
 import useScrollPosition from '../../hooks/useScrollPosition';
 
 const Welcome = (): JSX.Element => {

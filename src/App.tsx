@@ -19,7 +19,7 @@ const App = (): JSX.Element => {
             </UnAuth>
           }
         >
-          <Route path="welcome" element={<Welcome />} />
+          <Route path="/welcome" element={<Welcome />} />
         </Route>
         <Route
             element={

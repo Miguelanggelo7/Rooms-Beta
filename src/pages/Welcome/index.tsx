@@ -19,7 +19,7 @@ const Welcome = (): JSX.Element => {
   return (
     <div>
       <div className='welcome-banner'>
-        <video playsInline autoPlay muted loop id="myVideo">
+        <video playsInline preload="true" autoPlay muted loop id="myVideo">
           <source src={banVideo} type="video/mp4"/>
         </video>
         <img src={logo} className="logo-banner"/>

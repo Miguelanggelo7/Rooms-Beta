@@ -10,31 +10,124 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { useUser } from '../../hooks/useUser';
 import { signOut } from '../../api/auth';
 import Divider from '@mui/material/Divider';
+import { IconButton, InputAdornment, Popover, TextField, Typography } from '@mui/material';
+import { Clear, FilterList, MoreVertOutlined, Search, Settings } from '@mui/icons-material';
+import { useState } from 'react';
+import ProfileDrawer from '../ProfileDrawer';
 
 const Menu = (): JSX.Element => {
 
     const user = useUser()!;
+
+    const [onFocusInput, setOnFocusInput] = useState(false);
+
+    const [filterWithoutRead, setFilterWithoutRead] = useState(false);
+
+    const [filterChat, setFilterChat] = useState("");
+
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    
+    const [openDrawerProfile, setOpenDrawerProfile] = useState(false);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    
+    const openPopover = Boolean(anchorEl);
+    const id = openPopover ? 'simple-popover' : undefined;
+    
   
     return (
         <>
+            <ProfileDrawer
+                open={openDrawerProfile}
+                onOpen={() => setOpenDrawerProfile(true)}
+                onClose={() => setOpenDrawerProfile(false)}
+            />
             <AppBar 
                 position="fixed" 
                 sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, width: 400, position: 'relative', backgroundColor: '#f6f6f6', borderRight: '1px solid #e0e0e0' }} 
                 elevation={0}
             >
                 <Toolbar>
-                    <Stack direction="row" spacing={2}>
-                        <Avatar sx={{cursor: 'pointer'}} alt={user.name} src={user.image ? user.image : ""} />
+                    <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%'}}>
+                        <Avatar sx={{cursor: 'pointer'}} alt={user.name} src={user.image ? user.image : ""} onClick={() => setOpenDrawerProfile(true)} />
+                        <IconButton aria-describedby={id} onClick={handleClick} sx={{position: 'absolute', right: 0}}>
+                            <MoreVertOutlined/>
+                        </IconButton>
                     </Stack>
                 </Toolbar>
-                <Toolbar>
-                    <Stack direction="row" spacing={2}>
-                        
+                <Popover
+                    id={id}
+                    open={openPopover}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    >
+                        <List>
+                            <ListItem  
+                                disablePadding 
+                                dense
+                            >
+                                <ListItemButton onClick={signOut}>
+                                    <ListItemText primary={"Cerrar sesión"}/>
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                </Popover>
+                <Toolbar sx={{boxShadow: onFocusInput ? '0 4px 2px -2px rgba(0,0,0,0.1)' : '', transition: 'all .3s', backgroundColor: '#fff', borderTop: '1px solid #dcdcdc', borderBottom: '1px solid #dcdcdc'}}>
+                    <Stack direction="row" spacing={2} justifyContent="center" >
+                        <TextField 
+                            autoComplete='off'
+                            onFocus={() => setOnFocusInput(true)}
+                            onBlur={() => setOnFocusInput(false)}
+                            placeholder='Busca un chat'
+                            variant="standard"
+                            value={filterChat}
+                            onChange={e => setFilterChat(e.target.value)}
+                            size='small' 
+                            sx={{
+                                backgroundColor: '#f6f6f6',
+                                borderRadius: '5px',
+                                width: '238pt',
+                            }}
+                            InputProps={{
+                                disableUnderline: true,
+                                style: {
+                                    fontSize: "10pt",
+                                    paddingTop: '3pt',
+                                    paddingLeft: '10pt',
+                                },
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search fontSize='small' sx={{marginTop: '-2px', marginRight: '15pt', transition: 'all .3s', color: onFocusInput ? "#682bd7" : ""}}/>
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        { filterChat && <Clear onClick={() => setFilterChat("")} fontSize='small' sx={{cursor: 'pointer', marginRight: '5pt', marginTop: '-2px'}}/>}
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                        <IconButton sx={{transition: 'all .3s' ,backgroundColor: filterWithoutRead ? "#682bd7" : "", '&:hover' : {backgroundColor: filterWithoutRead ? "#682bd7" : ""}}} onClick={() => setFilterWithoutRead(!filterWithoutRead)} size='small'>
+                            <FilterList sx={{ color: filterWithoutRead ? "#fff" : "" }} fontSize='small'/>
+                        </IconButton>
                     </Stack>
                 </Toolbar>
             </AppBar>
@@ -48,23 +141,29 @@ const Menu = (): JSX.Element => {
             >
                 <Toolbar/>
                 <Toolbar/>
-                <Box sx={{ overflow: 'auto', border: 'none'}}>
+                <Box sx={{ overflow: 'auto', border: 'none', marginTop: '-8px'}}>
                     <List>
                         {['Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                         <>
-                            <ListItem key={text} disablePadding>
+                            <ListItem 
+                                key={text} 
+                                disablePadding 
+                                sx={{position: 'relative'}}
+                            >
                                 <ListItemButton>
-                                <ListItemIcon>
-                                    <Avatar/>
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
+                                    <Typography variant='caption' sx={{position: 'absolute', right: 0, top: 0, margin: '10px'}}>
+                                        5:50 p. m.
+                                    </Typography>
+                                    <ListItemIcon>
+                                        <Avatar/>
+                                    </ListItemIcon>
+                                    <ListItemText primary={text} secondary={"✓ " + text}/>
                                 </ListItemButton>
                             </ListItem>
-                            <Divider variant="inset" component="li" />
+                            <Divider sx={{backgroundColor: '#f6f6f6'}} variant="inset" component="li" />
                         </>
                         ))}
                     </List>
-                    <button onClick={signOut}>salir</button>
                 </Box>
             </Drawer>
         </>

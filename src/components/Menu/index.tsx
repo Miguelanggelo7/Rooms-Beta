@@ -18,7 +18,12 @@ import { Clear, FilterList, MoreVertOutlined, Search, Settings } from '@mui/icon
 import { useState } from 'react';
 import ProfileDrawer from '../ProfileDrawer';
 
-const Menu = (): JSX.Element => {
+interface UserChat {
+    idUser: string;
+    setId: any;
+  }
+
+const Menu = ({idUser, setId}: UserChat): JSX.Element => {
 
     const user = useUser()!;
 
@@ -143,12 +148,13 @@ const Menu = (): JSX.Element => {
                 <Toolbar/>
                 <Box sx={{ overflow: 'auto', border: 'none', marginTop: '-8px'}}>
                     <List>
-                        {['Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                        {['Jose', 'Juan', 'Send', 'Pedro','Alejandro', 'Miguelanggelo', 'Gustavo', 'Monica','Nahum', 'Charbel', 'Pipo', 'Alexis','Juanita', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                         <>
                             <ListItem 
-                                key={text} 
+                                key={text}
+                                onClick={() => setId(text)}
                                 disablePadding 
-                                sx={{position: 'relative'}}
+                                sx={{position: 'relative', backgroundColor: idUser === text ? "#eee" : ""}}
                             >
                                 <ListItemButton>
                                     <Typography variant='caption' sx={{position: 'absolute', right: 0, top: 0, margin: '10px'}}>

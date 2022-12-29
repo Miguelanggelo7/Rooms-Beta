@@ -5,16 +5,16 @@ import './welcome.scss';
 import logo from '../../assets/roomslogo.png';
 import banVideo from '../../assets/bannerVideo.mp4';
 import { Fade } from '@mui/material';
-import useScrollPosition from '../../hooks/useScrollPosition';
+// import useScrollPosition from '../../hooks/useScrollPosition';
 
 const Welcome = (): JSX.Element => {
 
   const [open, setOpen] = useState<boolean>(false);
-  const scrollPosition = useScrollPosition();
+  // const scrollPosition = useScrollPosition();
 
-  useEffect(() => {
-    console.log(scrollPosition);
-  }, [scrollPosition]);
+  // useEffect(() => {
+  //   console.log(scrollPosition);
+  // }, [scrollPosition]);
 
   return (
     <div>
@@ -33,11 +33,11 @@ const Welcome = (): JSX.Element => {
         </motion.button>
         <Fade in={true} timeout={1000}>
           <div className='text-banner'>
-            <p className='subtitle-banner'>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
+            <p className='subtitle-banner'>Every chat has a story.</p>
           </div>
         </Fade>
       </div>
-      <Fade in={scrollPosition > 500} timeout={1000}>
+      {/* <Fade in={scrollPosition > 500} timeout={1000}>
         <div className='block1'>
           .
         </div>
@@ -46,7 +46,7 @@ const Welcome = (): JSX.Element => {
         <div className='block2'>
           .
         </div>
-      </Fade>
+      </Fade> */}
       <Login open={open} setOpen={setOpen}/>
     </div>
   );

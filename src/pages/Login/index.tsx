@@ -58,6 +58,8 @@ const Login = (props: LoginProps) => {
     border: '2px solid #010101', 
     marginLeft: '10pt',
     marginRight: '10pt',
+    width: '35pt',
+    height: '35pt',
   }
 
   const fullScreen = useMediaQuery("(max-width:950px)");

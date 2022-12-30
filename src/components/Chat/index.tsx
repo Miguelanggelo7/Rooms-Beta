@@ -1,5 +1,7 @@
 import { MoreVertOutlined } from '@mui/icons-material';
-import { AppBar, Avatar, IconButton, Stack, Toolbar, Typography } from '@mui/material';
+import { AppBar, Avatar, IconButton, Stack, Toolbar, Typography, Box } from '@mui/material';
+import Lottie from 'react-lottie';
+import animationChat from '../../assets/startChat.json';
 import './chat.scss';
 
 interface UserChat {
@@ -7,6 +9,15 @@ interface UserChat {
   }
 
 const Chat = ({idUser}: UserChat): JSX.Element => {
+
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: require('../../assets/startChat.json'),
+        rendererSettings: {
+          preserveAspectRatio: 'xMidYMid slice',
+        },
+      }
   
     return (
         <div>
@@ -29,9 +40,19 @@ const Chat = ({idUser}: UserChat): JSX.Element => {
                     </Toolbar>
                 </AppBar>
             ) : (
-                <Typography textAlign={"center"}>
-                    Inicia un chat
-                </Typography>
+                <div className='container-empty'>
+                    <div className='container-animation'>
+                        <Box sx={{ width: "40%", mx: "auto", mt: '-20pt' }}>
+                            <Lottie options={defaultOptions} loop />
+                        </Box>
+                        <Typography variant='h4' fontWeight={400} mb={2}>
+                            Rooms Web
+                        </Typography>
+                        <Typography variant='body1' fontWeight={400}>
+                            Envía y recibe mensajes desde cualquier parte del mundo. ¿Qué esperas para iniciar un chat?
+                        </Typography>
+                    </div>
+                </div>
             )}
         </div>
     );

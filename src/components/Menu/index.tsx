@@ -13,8 +13,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { useUser } from '../../hooks/useUser';
 import { signOut } from '../../api/auth';
 import Divider from '@mui/material/Divider';
-import { IconButton, InputAdornment, Popover, TextField, Typography } from '@mui/material';
-import { Clear, FilterList, MoreVertOutlined, Search, Settings } from '@mui/icons-material';
+import { Badge, IconButton, InputAdornment, Popover, TextField, Typography, Tooltip } from '@mui/material';
+import { Clear, FilterList, Chat, MoreVertOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
 import ProfileDrawer from '../ProfileDrawer';
 
@@ -65,6 +65,11 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
                 <Toolbar>
                     <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%'}}>
                         <Avatar sx={{cursor: 'pointer'}} alt={user.name} src={user.image ? user.image : ""} onClick={() => setOpenDrawerProfile(true)} />
+                        <Tooltip title="Nuevo chat">
+                            <IconButton sx={{position: 'absolute', right: 50}}>
+                                <Chat/>
+                            </IconButton>
+                        </Tooltip>
                         <IconButton aria-describedby={id} onClick={handleClick} sx={{position: 'absolute', right: 0}}>
                             <MoreVertOutlined/>
                         </IconButton>
@@ -130,7 +135,7 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
                                 ),
                             }}
                         />
-                        <IconButton sx={{transition: 'all .3s' ,backgroundColor: filterWithoutRead ? "#682bd7" : "", '&:hover' : {backgroundColor: filterWithoutRead ? "#682bd7" : ""}}} onClick={() => setFilterWithoutRead(!filterWithoutRead)} size='small'>
+                        <IconButton sx={{transition: 'all .3s' ,backgroundColor: filterWithoutRead ? "#a37cf0" : "", '&:hover' : {backgroundColor: filterWithoutRead ? "#a37cf0" : ""}}} onClick={() => setFilterWithoutRead(!filterWithoutRead)} size='small'>
                             <FilterList sx={{ color: filterWithoutRead ? "#fff" : "" }} fontSize='small'/>
                         </IconButton>
                     </Stack>
@@ -164,6 +169,7 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
                                         <Avatar/>
                                     </ListItemIcon>
                                     <ListItemText primary={text} secondary={"✓ " + text}/>
+                                    <Badge sx={{position: 'absolute', right: 0, bottom: 0, margin: '20px'}} badgeContent={4} color="error"/>
                                 </ListItemButton>
                             </ListItem>
                             <Divider sx={{backgroundColor: '#f6f6f6'}} variant="inset" component="li" />

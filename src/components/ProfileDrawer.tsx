@@ -4,6 +4,8 @@ import { IconButton, Typography, Avatar, TextField, InputAdornment } from "@mui/
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { motion } from 'framer-motion';
 import { useUser } from "../hooks/useUser";
+import { updateUser } from "../api/auth";
+import { User } from "../types";
 
 export default function ProfileDrawer({ open, onOpen, onClose }: any) {
 
@@ -13,6 +15,7 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
   const [info, setInfo] = useState<string>(user.info);
   const [editName, setEditName] = useState<boolean>(false);
   const [editInfo, setEditInfo] = useState<boolean>(false);
+  const [newUser, setNewUser] = useState<User>(user);
 
   useEffect(() => {
     if (!open){
@@ -22,6 +25,24 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
       setInfo(user.info);
     }; 
   }, [open]);
+
+  useEffect(() => {
+    updateUser(newUser.id, newUser);
+  }, [newUser]);
+
+  const handleChangeField = (field: string, value: string)=> {
+    setNewUser((previous) => ({ ...previous, [field]: value }));
+  };
+
+  const handleChangeName = () => {
+    setEditName(false);
+    handleChangeField("name", name);
+  }
+
+  const handleChangeInfo = () => {
+    setEditInfo(false);
+    handleChangeField("info", info);
+  }
 
   return (
     <>
@@ -87,7 +108,7 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
                   disableUnderline: editName ? false : true,
                   endAdornment: (
                       <InputAdornment position="end">
-                          { editName ? <Check fontSize="small" sx={{cursor: 'pointer'}} onClick={() => setEditName(false)}/> : <Edit fontSize="small" sx={{cursor: 'pointer'}} onClick={() => setEditName(true)}/>}
+                          { editName ? <Check fontSize="small" sx={{cursor: 'pointer'}} onClick={handleChangeName}/> : <Edit fontSize="small" sx={{cursor: 'pointer'}} onClick={() => setEditName(true)}/>}
                       </InputAdornment>
                   ),
               }}
@@ -111,7 +132,7 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
                 Información
               </Typography>
               <TextField
-                value={user.info}
+                value={info}
                 placeholder="Escribe algo..."
                 onChange={(e) => setInfo(e.target.value)}
                 variant="standard"
@@ -122,7 +143,7 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
                   disableUnderline: editInfo ? false : true,
                   endAdornment: (
                       <InputAdornment position="end">
-                          { editInfo ? <Check fontSize="small" sx={{cursor: 'pointer'}} onClick={() => setEditInfo(false)}/> : <Edit fontSize="small" sx={{cursor: 'pointer'}} onClick={() => setEditInfo(true)}/>}
+                          { editInfo ? <Check fontSize="small" sx={{cursor: 'pointer'}} onClick={handleChangeInfo}/> : <Edit fontSize="small" sx={{cursor: 'pointer'}} onClick={() => setEditInfo(true)}/>}
                       </InputAdornment>
                   ),
               }}

@@ -1,14 +1,18 @@
-import { MoreVertOutlined } from '@mui/icons-material';
-import { AppBar, Avatar, IconButton, Stack, Toolbar, Typography, Box } from '@mui/material';
+import { Mic, MoreVertOutlined, Send } from '@mui/icons-material';
+import { AppBar, Avatar, IconButton, Stack, Toolbar, Typography, Box, TextField } from '@mui/material';
 import Lottie from 'react-lottie';
-import animationChat from '../../assets/startChat.json';
 import './chat.scss';
+import { useEffect, useState } from "react";
 
 interface UserChat {
     idUser: string;
   }
 
 const Chat = ({idUser}: UserChat): JSX.Element => {
+
+    useEffect(() => {
+        setMessage('');
+    }, [idUser])
 
     const defaultOptions = {
         loop: true,
@@ -18,27 +22,75 @@ const Chat = ({idUser}: UserChat): JSX.Element => {
           preserveAspectRatio: 'xMidYMid slice',
         },
       }
+
+      const [message, setMessage] = useState<string>('');
   
     return (
         <div>
             { idUser !== "" ? (
-                <AppBar 
-                    position="fixed" 
-                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, position: 'relative', backgroundColor: '#f6f6f6', borderBottom: '1px solid #e0e0e0' }} 
-                    elevation={0}
-                >
-                    <Toolbar>
-                        <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%', alignItems: 'center'}}>
-                            <Avatar sx={{cursor: 'pointer'}}/>
-                            <Typography sx={{color: '#000'}}>
-                                {idUser}
-                            </Typography>
-                            <IconButton sx={{position: 'absolute', right: 0}}>
-                                <MoreVertOutlined/>
-                            </IconButton>
-                        </Stack>
-                    </Toolbar>
-                </AppBar>
+                <div className='cont-chat'>
+                    <AppBar 
+                        position="fixed" 
+                        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, position: 'relative', backgroundColor: '#f6f6f6', borderBottom: '1px solid #e0e0e0' }} 
+                        elevation={0}
+                    >
+                        <Toolbar>
+                            <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%', alignItems: 'center', color: '#010101'}}>
+                                <Avatar sx={{cursor: 'pointer'}}/>
+                                <Typography>
+                                    {idUser}
+                                </Typography>
+                                <IconButton sx={{position: 'absolute', right: 0}}>
+                                    <MoreVertOutlined/>
+                                </IconButton>
+                            </Stack>
+                        </Toolbar>
+                    </AppBar>
+                    <div/>
+                    <div style={{position: 'absolute', bottom: 0, width: '100%'}}>
+                        <AppBar 
+                            position='fixed'
+                            sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#f6f6f6', borderBottom: '1px solid #e0e0e0', position: 'relative' }} 
+                            elevation={0}
+                        >
+                            <Toolbar sx={{color: '#010101'}}>
+                                <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%', alignItems: 'center'}}>
+                                    <TextField 
+                                        autoComplete='off'
+                                        value={message}
+                                        onChange={e => setMessage(e.target.value)}
+                                        placeholder='Escribe un mensaje aquí'
+                                        variant="standard"
+                                        size='small' 
+                                        sx={{
+                                            backgroundColor: '#fff',
+                                            borderRadius: '5px',
+                                            width: '100%',
+                                            padding: '3pt',
+                                            transition: 'all .5s'
+                                        }}
+                                        InputProps={{
+                                            disableUnderline: true,
+                                            style: {
+                                                paddingTop: '3pt',
+                                                paddingLeft: '15pt',
+                                            },
+                                        }}
+                                    />
+                                    {message !== '' ? (
+                                        <IconButton>
+                                            <Send/>
+                                        </IconButton>
+                                    ) : (
+                                        <IconButton>
+                                            <Mic/>
+                                        </IconButton>
+                                    )}
+                                </Stack>
+                            </Toolbar>
+                        </AppBar>
+                    </div>
+                </div>
             ) : (
                 <div className='container-empty'>
                     <div className='container-animation'>

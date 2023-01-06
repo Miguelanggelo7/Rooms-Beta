@@ -1,3 +1,4 @@
+
 export interface User {
   id: string;
   name: string;
@@ -6,3 +7,10 @@ export interface User {
   info: string;
 }
 
+export interface Message {
+  id: string;
+  content: any;
+  read: boolean;
+  date: Date;
+  type: string;
+}

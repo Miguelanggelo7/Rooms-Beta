@@ -4,7 +4,7 @@ import { IconButton, Typography, Avatar, TextField, InputAdornment } from "@mui/
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { motion } from 'framer-motion';
 import { useUser } from "../hooks/useUser";
-import { updateUser } from "../api/auth";
+import { updateUser } from "../api/user";
 import { User } from "../types";
 
 export default function ProfileDrawer({ open, onOpen, onClose }: any) {

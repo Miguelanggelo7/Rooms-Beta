@@ -6,11 +6,10 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
-import { auth, db, storage } from "./config";
-import { User } from "../types";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth, db } from "./config";
+import { getUser, updateUser } from "./user";
 
 interface SignUpUserData {
   name: string;
@@ -98,45 +97,6 @@ export const logIn = async ({ email, password }: LogInUserData) => {
       }
     }
     return errorMessage;
-  }
-};
-
-export const updateUser = async (id: string, field: any) => {
-  try {
-    const userRef = doc(db, "users", id);
-    await updateDoc(userRef, field);
-  } catch (error) {
-    return error;
-  }
-};
-
-const uploadFiles = async (uid: any, files: any) => {
-  try {
-    const imageRef = ref(storage, `users/${uid}`);
-    const resUpload = await uploadBytes(imageRef, files);
-    const url = await getDownloadURL(resUpload.ref);
-    await updateUser(uid, { image: url });
-
-    return url;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getUser = async (id: string) => {
-  try {
-    const userRef = doc(db, "users", id);
-    const userDoc = await getDoc(userRef);
-
-    if (!userDoc.exists()) {
-      return null;
-    }
-
-    const user = { ...userDoc.data(), id } as User;
-
-    return user;
-  } catch (error) {
-    return null;
   }
 };
 

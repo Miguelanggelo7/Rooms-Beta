@@ -3,9 +3,10 @@ import { AppBar, Avatar, IconButton, Stack, Toolbar, Typography, Box, TextField 
 import Lottie from 'react-lottie';
 import './chat.scss';
 import { useEffect, useState } from "react";
+import { User } from '../../types';
 
 interface UserChat {
-    idUser: string;
+    idUser: User | null;
   }
 
 const Chat = ({idUser}: UserChat): JSX.Element => {
@@ -27,7 +28,7 @@ const Chat = ({idUser}: UserChat): JSX.Element => {
   
     return (
         <div>
-            { idUser !== "" ? (
+            { idUser ? (
                 <div className='cont-chat'>
                     <AppBar 
                         position="fixed" 
@@ -36,9 +37,9 @@ const Chat = ({idUser}: UserChat): JSX.Element => {
                     >
                         <Toolbar>
                             <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%', alignItems: 'center', color: '#010101'}}>
-                                <Avatar sx={{cursor: 'pointer'}}/>
+                                <Avatar sx={{cursor: 'pointer'}} src={idUser?.image}/>
                                 <Typography>
-                                    {idUser}
+                                    {idUser?.name}
                                 </Typography>
                                 <IconButton sx={{position: 'absolute', right: 0}}>
                                     <MoreVertOutlined/>
@@ -46,7 +47,27 @@ const Chat = ({idUser}: UserChat): JSX.Element => {
                             </Stack>
                         </Toolbar>
                     </AppBar>
-                    <div/>
+                    <div className='cont-messages'>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                        <h1>hola</h1>
+                    </div>
                     <div style={{position: 'absolute', bottom: 0, width: '100%'}}>
                         <AppBar 
                             position='fixed'

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import Chat from '../../components/Chat';
 import Menu from '../../components/Menu';
+import { User } from '../../types';
 import './home.scss';
 
 const Home = (): JSX.Element => {
 
-  const [userChat, setUserChat] = useState<string>("");
+  const [userChat, setUserChat] = useState<User | null>(null);
 
     return (
       <div className='container-home'>

@@ -17,25 +17,29 @@ import { Badge, IconButton, InputAdornment, Popover, TextField, Typography, Tool
 import { Clear, FilterList, Chat, MoreVertOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
 import ProfileDrawer from '../ProfileDrawer';
+import { User } from '../../types';
+import AddContactDialog from '../AddContactDialog';
 
 interface UserChat {
-    idUser: string;
-    setId: any;
+    idUser: User | null;
+    setId: (value: User | null) => void;
   }
 
 const Menu = ({idUser, setId}: UserChat): JSX.Element => {
 
     const user = useUser()!;
 
-    const [onFocusInput, setOnFocusInput] = useState(false);
+    const [onFocusInput, setOnFocusInput] = useState<boolean>(false);
 
-    const [filterWithoutRead, setFilterWithoutRead] = useState(false);
+    const [filterWithoutRead, setFilterWithoutRead] = useState<boolean>(false);
 
-    const [filterChat, setFilterChat] = useState("");
+    const [filterChat, setFilterChat] = useState<string>("");
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     
-    const [openDrawerProfile, setOpenDrawerProfile] = useState(false);
+    const [openDrawerProfile, setOpenDrawerProfile] = useState<boolean>(false);
+
+    const [openDialogContact, setOpenDialogContact] = useState<boolean>(false);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -45,10 +49,8 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
         setAnchorEl(null);
     };
 
-    
     const openPopover = Boolean(anchorEl);
     const id = openPopover ? 'simple-popover' : undefined;
-    
   
     return (
         <>
@@ -56,6 +58,11 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
                 open={openDrawerProfile}
                 onOpen={() => setOpenDrawerProfile(true)}
                 onClose={() => setOpenDrawerProfile(false)}
+            />
+            <AddContactDialog 
+                open={openDialogContact}
+                onClose={() => setOpenDialogContact(false)}
+                setId={setId}
             />
             <AppBar 
                 position="fixed" 
@@ -66,7 +73,7 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
                     <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%'}}>
                         <Avatar sx={{cursor: 'pointer'}} alt={user.name} src={user.image ? user.image : ""} onClick={() => setOpenDrawerProfile(true)} />
                         <Tooltip title="Nuevo chat">
-                            <IconButton sx={{position: 'absolute', right: 50}}>
+                            <IconButton sx={{position: 'absolute', right: 50}} onClick={() => setOpenDialogContact(true)}>
                                 <Chat/>
                             </IconButton>
                         </Tooltip>
@@ -152,14 +159,14 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
                 <Toolbar/>
                 <Toolbar/>
                 <Box sx={{ overflow: 'auto', border: 'none', marginTop: '-8px'}}>
-                    <List>
+                    {/* <List>
                         {['Jose', 'Juan', 'Send', 'Pedro','Alejandro', 'Miguelanggelo', 'Gustavo', 'Monica','Nahum', 'Charbel', 'Pipo', 'Alexis','Juanita', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                         <>
                             <ListItem 
                                 key={text}
                                 onClick={() => setId(text)}
                                 disablePadding 
-                                sx={{position: 'relative', backgroundColor: idUser === text ? "#eee" : ""}}
+                                sx={{position: 'relative', backgroundColor: idUser?.id === text ? "#eee" : ""}}
                             >
                                 <ListItemButton>
                                     <Typography variant='caption' sx={{position: 'absolute', right: 0, top: 0, margin: '10px'}}>
@@ -175,7 +182,7 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
                             <Divider sx={{backgroundColor: '#f6f6f6'}} variant="inset" component="li" />
                         </>
                         ))}
-                    </List>
+                    </List> */}
                 </Box>
             </Drawer>
         </>

@@ -7,9 +7,10 @@ import { User } from '../../types';
 
 interface UserChat {
     idUser: User | null;
+    setOpenProfileContact: (value: boolean) => void;
   }
 
-const Chat = ({idUser}: UserChat): JSX.Element => {
+const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
 
     useEffect(() => {
         setMessage('');
@@ -37,7 +38,7 @@ const Chat = ({idUser}: UserChat): JSX.Element => {
                     >
                         <Toolbar>
                             <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%', alignItems: 'center', color: '#010101'}}>
-                                <Avatar sx={{cursor: 'pointer'}} src={idUser?.image}/>
+                                <Avatar sx={{cursor: 'pointer'}} src={idUser?.image} onClick={() => setOpenProfileContact(true)}/>
                                 <Typography>
                                     {idUser?.name}
                                 </Typography>
@@ -48,25 +49,7 @@ const Chat = ({idUser}: UserChat): JSX.Element => {
                         </Toolbar>
                     </AppBar>
                     <div className='cont-messages'>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
-                        <h1>hola</h1>
+                        {/* Aca los mensajes */}
                     </div>
                     <div style={{position: 'absolute', bottom: 0, width: '100%'}}>
                         <AppBar 

@@ -8,11 +8,13 @@ const Home = (): JSX.Element => {
 
   const [userChat, setUserChat] = useState<User | null>(null);
 
+  const [openProfileContact, setOpenProfileContact] = useState<boolean>(false);
+
     return (
       <div className='container-home'>
-        <Menu idUser={userChat} setId={setUserChat}/>
+        <Menu idUser={userChat} setId={setUserChat} openProfileContact={openProfileContact} setOpenProfileContact={setOpenProfileContact}/>
         <div className='container-chat'>
-          <Chat idUser={userChat}/>
+          <Chat idUser={userChat} setOpenProfileContact={setOpenProfileContact}/>
         </div>
       </div>
     );

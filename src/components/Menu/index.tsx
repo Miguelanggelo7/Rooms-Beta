@@ -19,13 +19,16 @@ import { useState } from 'react';
 import ProfileDrawer from '../ProfileDrawer';
 import { User } from '../../types';
 import AddContactDialog from '../AddContactDialog';
+import ProfileContactDrawer from '../ProfileContactDrawer';
 
 interface UserChat {
     idUser: User | null;
     setId: (value: User | null) => void;
+    openProfileContact: boolean;
+    setOpenProfileContact: (value: boolean) => void;
   }
 
-const Menu = ({idUser, setId}: UserChat): JSX.Element => {
+const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserChat): JSX.Element => {
 
     const user = useUser()!;
 
@@ -59,6 +62,12 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
                 onOpen={() => setOpenDrawerProfile(true)}
                 onClose={() => setOpenDrawerProfile(false)}
             />
+            <ProfileContactDrawer 
+                open={openProfileContact}
+                onOpen={() => setOpenProfileContact(true)}
+                onClose={() => setOpenProfileContact(false)}
+                user={idUser}
+            />
             <AddContactDialog 
                 open={openDialogContact}
                 onClose={() => setOpenDialogContact(false)}
@@ -71,7 +80,7 @@ const Menu = ({idUser, setId}: UserChat): JSX.Element => {
             >
                 <Toolbar>
                     <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%'}}>
-                        <Avatar sx={{cursor: 'pointer'}} alt={user.name} src={user.image ? user.image : ""} onClick={() => setOpenDrawerProfile(true)} />
+                        <Avatar sx={{cursor: 'pointer'}} src={user.image ? user.image : ""} onClick={() => setOpenDrawerProfile(true)} />
                         <Tooltip title="Nuevo chat">
                             <IconButton sx={{position: 'absolute', right: 50}} onClick={() => setOpenDialogContact(true)}>
                                 <Chat/>

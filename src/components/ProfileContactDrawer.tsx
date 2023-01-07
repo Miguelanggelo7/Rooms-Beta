@@ -1,48 +1,9 @@
-import { ArrowBack, Check, Edit } from "@mui/icons-material";
-import { useState, useEffect } from 'react';
-import { IconButton, Typography, Avatar, TextField, InputAdornment } from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
+import { IconButton, Typography, Avatar, TextField } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { motion } from 'framer-motion';
-import { useUser } from "../hooks/useUser";
-import { updateUser } from "../api/user";
-import { User } from "../types";
 
-export default function ProfileDrawer({ open, onOpen, onClose }: any) {
-
-  const user = useUser()!;
-
-  const [name, setName] = useState<string>(user.name);
-  const [info, setInfo] = useState<string>(user.info);
-  const [editName, setEditName] = useState<boolean>(false);
-  const [editInfo, setEditInfo] = useState<boolean>(false);
-  const [newUser, setNewUser] = useState<User>(user);
-
-  useEffect(() => {
-    if (!open){
-      setEditName(false);
-      setEditInfo(false);
-      setName(user.name);
-      setInfo(user.info);
-    }; 
-  }, [open]);
-
-  useEffect(() => {
-    updateUser(newUser.id, newUser);
-  }, [newUser]);
-
-  const handleChangeField = (field: string, value: string)=> {
-    setNewUser((previous) => ({ ...previous, [field]: value }));
-  };
-
-  const handleChangeName = () => {
-    setEditName(false);
-    handleChangeField("name", name);
-  }
-
-  const handleChangeInfo = () => {
-    setEditInfo(false);
-    handleChangeField("info", info);
-  }
+export default function ProfileContactDrawer({ open, onOpen, onClose, user }: any) {
 
   return (
     <>
@@ -95,23 +56,16 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
           </div>
           <div style={{width: '100%', marginTop: '20pt', backgroundColor: '#fff', boxShadow: '0 4px 2px -2px rgba(0,0,0,0.1)', padding: '10pt', paddingLeft: '30pt', paddingRight: '30pt'}}>
               <Typography variant="body2" color="primary">
-                Tu nombre
+                Nombre
               </Typography>
               <TextField
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={user.name || ""}
                 variant="standard"
                 fullWidth
-                disabled={ editName ? false : true}
-                InputProps={{
-                  
-                  disableUnderline: editName ? false : true,
-                  endAdornment: (
-                      <InputAdornment position="end">
-                          { editName ? <Check fontSize="small" sx={{cursor: 'pointer'}} onClick={handleChangeName}/> : <Edit fontSize="small" sx={{cursor: 'pointer'}} onClick={() => setEditName(true)}/>}
-                      </InputAdornment>
-                  ),
-              }}
+                disabled
+                InputProps={{              
+                    disableUnderline: true,
+                }}
                 sx={{
                   marginTop: '20pt',
                   "& .MuiInputBase-input.Mui-disabled": {
@@ -121,36 +75,23 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
                 }}
               />
           </div>
-          <div style={{textAlign: 'center', marginTop: '10pt'}}>
-            <Typography variant="caption">
-              Este nombre será visible para tus contactos de Rooms.
-            </Typography>
-          </div>
 
           <div style={{width: '100%', marginTop: '20pt', boxShadow: '0 4px 2px -2px rgba(0,0,0,0.1)', backgroundColor: '#fff', padding: '10pt', paddingLeft: '30pt', paddingRight: '30pt'}}>
               <Typography variant="body2" color="primary">
                 Información
               </Typography>
               <TextField
-                value={info}
-                placeholder="Escribe algo..."
-                onChange={(e) => setInfo(e.target.value)}
+                value={user.info || "Este usuario no tiene información"}
                 variant="standard"
                 fullWidth
-                disabled={ editInfo ? false : true}
-                InputProps={{
-                  
-                  disableUnderline: editInfo ? false : true,
-                  endAdornment: (
-                      <InputAdornment position="end">
-                          { editInfo ? <Check fontSize="small" sx={{cursor: 'pointer'}} onClick={handleChangeInfo}/> : <Edit fontSize="small" sx={{cursor: 'pointer'}} onClick={() => setEditInfo(true)}/>}
-                      </InputAdornment>
-                  ),
-              }}
+                disabled
+                InputProps={{              
+                  disableUnderline: true,
+                }}
                 sx={{
                   marginTop: '20pt',
                   "& .MuiInputBase-input.Mui-disabled": {
-                    WebkitTextFillColor: "#000000",
+                    WebkitTextFillColor: user.info ? "#000000" : "#bbb",
                     borderBottom: 'none',
                   },
                 }}

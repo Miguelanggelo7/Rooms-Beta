@@ -10,6 +10,7 @@ import {useState, useEffect} from 'react';
 import { getUserByEmail } from '../api/user';
 import { User } from '../types';
 import { useSnackbar } from "notistack";
+import { FormattedMessage, useIntl } from 'react-intl'; 
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -30,6 +31,8 @@ const AddContactDialog = (props: SimpleDialogProps) => {
 
   const [email, setEmail] = useState<string>("");
 
+  const intl = useIntl();
+
   const [disabledActions, setDisabledActions] = useState<boolean>(false)
 
   const startNewChat = async () => {
@@ -37,7 +40,7 @@ const AddContactDialog = (props: SimpleDialogProps) => {
     const userChat = await getUserByEmail(email);
     if (!userChat) {
       setDisabledActions(false);
-      return enqueueSnackbar("Este correo electrónico no pertenece a ningún usuario de Rooms", { variant: "error" });
+      return enqueueSnackbar(intl.formatMessage({id: 'thisEmailDoesntExist'}), { variant: "error" });
     } else {
         //@ts-ignore
         setId(userChat);
@@ -47,11 +50,16 @@ const AddContactDialog = (props: SimpleDialogProps) => {
 
   return (
     <Dialog fullWidth onClose={onClose} open={open}>
-      <DialogTitle>Empezar un nuevo chat</DialogTitle>
+      <DialogTitle>
+        <FormattedMessage 
+            id="startNewChat"
+            defaultMessage="Start a new chat"
+        />
+      </DialogTitle>
       <DialogContent>
         <TextField 
           fullWidth
-          label="Correo electrónico"
+          label={intl.formatMessage({id: 'email'})}
           variant='standard'
           type="email"
           value={email}
@@ -60,10 +68,16 @@ const AddContactDialog = (props: SimpleDialogProps) => {
       </DialogContent>
       <DialogActions>
         <Button disabled={disabledActions} color="secondary" onClick={onClose}>
-            Cancelar
+          <FormattedMessage 
+              id="cancel"
+              defaultMessage="Cancel"
+          />
         </Button>
         <Button disabled={disabledActions || !email} onClick={startNewChat}>
-            Aceptar
+          <FormattedMessage 
+              id="startChat"
+              defaultMessage="Start a chat"
+          />
         </Button>
       </DialogActions>
     </Dialog>

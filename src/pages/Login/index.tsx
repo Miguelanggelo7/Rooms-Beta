@@ -1,15 +1,11 @@
 import { Close } from '@mui/icons-material';
-import { TextField, Dialog, useMediaQuery, Typography, IconButton, Tooltip } from '@mui/material';
+import { TextField, Dialog, useMediaQuery, Typography, IconButton } from '@mui/material';
 import { useState } from 'react';
 import './login.scss';
-import FacebookIcon from '@mui/icons-material/FacebookOutlined';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import GoogleIcon from '@mui/icons-material/Google';
 import { motion } from "framer-motion";
 import { GoogleAuth, logIn, signUp } from '../../api/auth';
 import { useSnackbar } from "notistack";
-import { auth } from '../../api/config';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { FormattedMessage, useIntl } from 'react-intl'; 
 
 export interface LoginProps {
   open: boolean;
@@ -38,9 +34,11 @@ const logInData = {
   password: "",
 };
 
-const Login = (props: LoginProps) => {
+const Login = (props: LoginProps): JSX.Element => {
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const intl = useIntl();
 
   const [userSignUp, setUserSignUp] = useState<ValuesSignUp>(signUpData);
   const [userLogIn, setUserLogIn] = useState<ValuesLogIn>(logInData);
@@ -64,7 +62,6 @@ const Login = (props: LoginProps) => {
 
   const fullScreen = useMediaQuery("(max-width:950px)");
 
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -84,7 +81,7 @@ const Login = (props: LoginProps) => {
       return enqueueSnackbar(error, { variant: "error" });
     }
 
-    enqueueSnackbar("¡Bienvenido a Rooms!", { variant: "success" });
+    enqueueSnackbar(intl.formatMessage({id: 'welcomeRooms'}), { variant: "success" });
   };
 
   const onSubmitLogIn = async (user: ValuesLogIn) => {
@@ -94,7 +91,7 @@ const Login = (props: LoginProps) => {
       return enqueueSnackbar(error, { variant: "error" });
     }
 
-    enqueueSnackbar("¡Bienvenido de vuelta!", { variant: "success" });
+    enqueueSnackbar(intl.formatMessage({id: 'welcomeBack'}), { variant: "success" });
   }
 
   return (
@@ -109,34 +106,67 @@ const Login = (props: LoginProps) => {
                 <Close sx={{color: "#010101"}}/>
               </IconButton>
             </div>
-            <Typography variant='h4' sx={{color: "#010101"}}>Create Account</Typography>
+            <Typography variant='h4' sx={{color: "#010101"}}>
+              <FormattedMessage 
+                id="signUp"
+                defaultMessage="Sign up"
+              />
+            </Typography>
             <div className="social-container">
-              {/* <IconButton sx={socialIconStyle} >
-                <FacebookIcon 
-                  sx={{color: "#3b5998"}}
-                />
-              </IconButton> */}
               <IconButton sx={socialIconStyle} onClick={GoogleAuth}>
                 <img style={{width: '20pt'}} src={"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png"}/>
               </IconButton>
-              {/* <IconButton sx={socialIconStyle} >
-                <TwitterIcon 
-                  sx={{color: "#00acee"}}
-                />
-              </IconButton>  */}
             </div>
-            <Typography>or use your email for registration</Typography>
-            <TextField onChange={(e) => handleChangeSignUp("name", e.target.value)} placeholder="Name" name="name" fullWidth sx={inputStyle}/>
-            <TextField onChange={(e) => handleChangeSignUp("email", e.target.value)} placeholder="Email" name="email" type="email" fullWidth sx={inputStyle}/>
-            <TextField onChange={(e) => handleChangeSignUp("password", e.target.value)} placeholder="Password" name="password" type="password" fullWidth sx={inputStyle}/>
-            <a className='sign-up-link' onClick={() => setIsContainerActive(false)}>Already have an account? Sign in here</a>
+            <Typography>
+              <FormattedMessage 
+                id="orUseYourEmail"
+                defaultMessage="or use your email for registration"
+              />
+            </Typography>
+            <TextField 
+              onChange={(e) => handleChangeSignUp("name", e.target.value)} 
+              //@ts-ignore
+              placeholder={
+                intl.formatMessage({id: 'name'})
+              }
+              name="name" 
+              fullWidth sx={inputStyle}
+            />
+            <TextField 
+              onChange={(e) => handleChangeSignUp("email", e.target.value)} 
+              placeholder={
+                intl.formatMessage({id: 'email'})
+              }
+              name="email" 
+              type="email" 
+              fullWidth sx={inputStyle}
+            />
+            <TextField 
+              onChange={(e) => handleChangeSignUp("password", e.target.value)} 
+              placeholder={
+                intl.formatMessage({id: 'password'})
+              }
+              name="password" 
+              type="password" 
+              fullWidth 
+              sx={inputStyle}
+            />
+            <a className='sign-up-link' onClick={() => setIsContainerActive(false)}>
+              <FormattedMessage 
+                id="alreadyAccount"
+                defaultMessage="Already have an account? Sign in here"
+              />
+            </a>
             <motion.button 
               className="button-login" 
               whileHover={{scale: 1.05, backgroundColor: '#682bd7', color: "#fff"}}
               whileTap={{scale: 0.95}}
               onClick={() => onSubmitSignUp(userSignUp)}
             >
-              Sign Up
+              <FormattedMessage 
+                id="signUp"
+                defaultMessage="Sign up"
+              />
             </motion.button>
           </div>
         </div>
@@ -147,60 +177,112 @@ const Login = (props: LoginProps) => {
                   <Close sx={{color: "#010101"}}/>
                 </IconButton>
               </div>
-              <Typography variant='h4' sx={{color: "#010101"}}>Sign in</Typography>
-            <div className="social-container">
-              {/* <IconButton sx={socialIconStyle} >
-                <FacebookIcon 
-                  sx={{color: "#3b5998"}}
+              <Typography variant='h4' sx={{color: "#010101"}}>
+                <FormattedMessage 
+                  id="signIn"
+                  defaultMessage="Sign in"
                 />
-              </IconButton> */}
+              </Typography>
+            <div className="social-container">
               <IconButton sx={socialIconStyle} onClick={GoogleAuth}>
                 <img style={{width: '20pt'}} src={"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png"}/>
               </IconButton>
-              {/* <IconButton sx={socialIconStyle} >
-                <TwitterIcon 
-                  sx={{color: "#00acee"}}
-                />
-              </IconButton>  */}
             </div>
-            <Typography>or use your account</Typography>
-            <TextField onChange={(e) => handleChangeLogIn("email", e.target.value)} placeholder="Email" name="email" type="email" fullWidth sx={inputStyle}/>
-            <TextField onChange={(e) => handleChangeLogIn("password", e.target.value)} placeholder="Password" name="password" type="password" fullWidth sx={inputStyle}/>
-            <a className='sign-up-link' onClick={() => setIsContainerActive(true)}>Dont have an account? Sign up here</a>
+            <Typography>
+              <FormattedMessage 
+                id="orUseYourAccount"
+                defaultMessage="or use your account"
+              />
+            </Typography>
+            <TextField
+              onChange={(e) => handleChangeLogIn("email", e.target.value)} 
+              placeholder={
+                intl.formatMessage({id: 'email'})
+              } 
+              name="email" 
+              type="email" 
+              fullWidth 
+              sx={inputStyle}
+            />
+            <TextField 
+              onChange={(e) => handleChangeLogIn("password", e.target.value)} 
+              placeholder={
+                intl.formatMessage({id: 'password'})
+              }
+              name="password" 
+              type="password" 
+              fullWidth 
+              sx={inputStyle}
+            />
+            <a className='sign-up-link' onClick={() => setIsContainerActive(true)}>           
+              <FormattedMessage 
+                id="dontHaveAnAccount"
+                defaultMessage="Dont have an account? Sign up here"
+              />
+            </a>
             <motion.button 
               className="button-login" 
               whileHover={{scale: 1.05, backgroundColor: '#682bd7', color: "#fff"}}
               whileTap={{scale: 0.95}}
               onClick={() => onSubmitLogIn(userLogIn)}
             >
-              Sign In
+              <FormattedMessage 
+                id="signIn"
+                defaultMessage="Sign in"
+              />
             </motion.button>
           </div>
         </div>
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
-              <Typography variant='h3' sx={{color: '#fff', marginTop: '-100pt', marginBottom: '20pt'}}>Welcome Back!</Typography>
-              <Typography sx={{color: '#fff'}}>To keep connected with us please login with your personal details</Typography>
+              <Typography variant='h3' sx={{color: '#fff', marginTop: '-100pt', marginBottom: '20pt'}}>
+                <FormattedMessage 
+                  id="welcomeBack"
+                  defaultMessage="Welcome Back!"
+                />
+              </Typography>
+              <Typography sx={{color: '#fff'}}>
+                <FormattedMessage 
+                  id="toKeepConnected"
+                  defaultMessage="To keep connected with us please login with your personal details"
+                />
+              </Typography>
               <motion.button 
                 className="button-login ghost" id="signIn" 
                 onClick={() => setIsContainerActive(false)}
                 whileHover={{scale: 1.05, backgroundColor: '#fff', color: "#010101"}}
                 whileTap={{scale: 0.95}}
               >
-                Sign In
+                <FormattedMessage 
+                  id="signIn"
+                  defaultMessage="Sign in"
+                />
               </motion.button>
             </div>
             <div className="overlay-panel overlay-right">
-            <Typography variant='h3' sx={{color: '#fff', marginTop: '-100pt', marginBottom: '20pt'}}>Hi There!</Typography>
-              <Typography sx={{color: '#fff'}}>Enter your personal details to open an account with us</Typography>
+              <Typography variant='h3' sx={{color: '#fff', marginTop: '-100pt', marginBottom: '20pt'}}>
+                <FormattedMessage 
+                  id="hiThere"
+                  defaultMessage="Hi There!"
+                />
+              </Typography>
+              <Typography sx={{color: '#fff'}}>
+                <FormattedMessage 
+                  id="enterPersonalDetails"
+                  defaultMessage="Enter your personal details to open an account with us"
+                />
+              </Typography>
               <motion.button 
                 className="button-login ghost" id="signUp" 
                 onClick={() => setIsContainerActive(true)}
                 whileHover={{scale: 1.05, backgroundColor: '#fff', color: "#010101"}}
                 whileTap={{scale: 0.95}}
               >
-                Sign Up
+                <FormattedMessage 
+                  id="signUp"
+                  defaultMessage="Sign up"
+                />
               </motion.button>
             </div>
           </div>

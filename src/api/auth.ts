@@ -23,6 +23,9 @@ interface LogInUserData {
 }
 
 export const signUp = async ({ name, email, password }: SignUpUserData) => {
+
+  const language = navigator.language.substring(0,2);
+
   if(name !== ""){
     try {
       const { user } = await createUserWithEmailAndPassword(
@@ -39,60 +42,63 @@ export const signUp = async ({ name, email, password }: SignUpUserData) => {
       return null;
     } catch (error) {
   
-      let errorMessage = "Error desconocido";
+      let errorMessage = language === "es" ? "Error desconocido" : "Unknown error";
   
       if (error instanceof FirebaseError) {
         console.log(error.code)
         switch (error.code) {
           case AuthErrorCodes.INVALID_EMAIL:
           case "auth/missing-email":
-            errorMessage = "Email invalido";
+            errorMessage = language === "es" ? "Email inválido" : "Invalid email";
             break;
           case AuthErrorCodes.INTERNAL_ERROR:
-            errorMessage = "Ingrese su contraseña";
+            errorMessage = language === "es" ? "Ingrese su contraseña" : "Enter your password";
             break;
           case AuthErrorCodes.EMAIL_EXISTS:
-            errorMessage = "El email ingresado ya está en uso";
+            errorMessage = language === "es" ? "El email ingresado ya está en uso" : "The email entered is already in use";
             break;
           default:
-            errorMessage = "Error desconocido";
+            errorMessage = language === "es" ? "Error desconocido" : "Unknown error";
             break;
         }
       }
       return errorMessage;
     }
   } else {
-    return "Ingrese su nombre";
+    return language === "es" ? "Ingrese su nombre" : "Enter your name";
   }
 };
 
 export const logIn = async ({ email, password }: LogInUserData) => {
+
+  const language = navigator.language.substring(0,2);
+
   try {
     await signInWithEmailAndPassword(auth, email, password);
 
     return null;
   } catch (error) {
-    let errorMessage = "Error desconocido";
+    let errorMessage = language === "es" ? "Error desconocido" : "Unknown error";
 
     if (error instanceof FirebaseError) {
       console.log(error.code)
       switch (error.code) {
         case AuthErrorCodes.INVALID_EMAIL:
         case "auth/missing-email":
-          errorMessage = "Email invalido";
+          errorMessage = language === "es" ? "Email inválido" : "Invalid email";
           break;
         case AuthErrorCodes.INTERNAL_ERROR:
-          errorMessage = "Ingrese su contraseña";
+          errorMessage = language === "es" ? "Ingrese su contraseña" : "Enter your password";
           break;
         case AuthErrorCodes.USER_DELETED:
         case AuthErrorCodes.INVALID_PASSWORD:
-          errorMessage = "Email o contraseña incorrectos";
+          errorMessage = language === "es" ? "Email o contraseña incorrectos" : "Wrong email or password";
           break;
         case AuthErrorCodes.TOO_MANY_ATTEMPTS_TRY_LATER:
-          errorMessage = "Cuenta bloqueada temporalmente";
+          errorMessage = language === "es" ? "Cuenta bloqueada temporalmente" : "Account temporarily blocked";
           break;
         default:
-          errorMessage = "Error desconocido";
+          errorMessage = language === "es" ? "Error desconocido" : "Unknown error";
           break;
       }
     }
@@ -138,10 +144,11 @@ export const GoogleAuth = async () => {
 }
 
 export const signOut = async () => {
+  const language = navigator.language.substring(0,2);
   try {
     await firebaseSignOut(auth);
     return null;
   } catch (error) {
-    return "Error desconocido";
+    return language === "es" ? "Error desconocido" : "Unknown error";
   }
 };

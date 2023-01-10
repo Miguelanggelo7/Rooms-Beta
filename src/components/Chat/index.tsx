@@ -4,6 +4,11 @@ import Lottie from 'react-lottie';
 import './chat.scss';
 import { useEffect, useState } from "react";
 import { User } from '../../types';
+import { FormattedMessage, useIntl } from 'react-intl'; 
+import { handleSendMessage } from '../../api/chat';
+import { useUser } from '../../hooks/useUser';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../api/config';
 
 interface UserChat {
     idUser: User | null;
@@ -12,8 +17,27 @@ interface UserChat {
 
 const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
 
+    const user = useUser()!;
+
+    const [chat, setChat] = useState();
+
     useEffect(() => {
         setMessage('');
+        
+        const getChat = () => {
+            //@ts-ignore
+           const unsub = onSnapshot(doc(db, "chats", user.id > idUser?.id ? user.id + idUser?.id  : idUser?.id  + user.id), (doc) => {
+                //@ts-ignore
+                setChat(doc.data());
+            });
+
+            return () => {
+                unsub();
+            };
+        };
+
+        idUser && getChat();
+    
     }, [idUser])
 
     const defaultOptions = {
@@ -26,6 +50,8 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
       }
 
       const [message, setMessage] = useState<string>('');
+
+      const intl = useIntl();
   
     return (
         <div>
@@ -38,7 +64,7 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                     >
                         <Toolbar>
                             <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%', alignItems: 'center', color: '#010101'}}>
-                                <Avatar sx={{cursor: 'pointer'}} src={idUser?.image} onClick={() => setOpenProfileContact(true)}/>
+                                <Avatar imgProps={{ referrerPolicy: "no-referrer" }} sx={{cursor: 'pointer'}} src={idUser?.image} onClick={() => setOpenProfileContact(true)}/>
                                 <Typography>
                                     {idUser?.name}
                                 </Typography>
@@ -49,12 +75,15 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                         </Toolbar>
                     </AppBar>
                     <div className='cont-messages'>
-                        {/* Aca los mensajes */}
+                        {/* @ts-ignore */}
+                        {chat?.messages.map((message, index) => (
+                            <h1 key={index+""}>{message.content}</h1>
+                        ))}
                     </div>
                     <div style={{position: 'absolute', bottom: 0, width: '100%'}}>
                         <AppBar 
                             position='fixed'
-                            sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#f6f6f6', borderBottom: '1px solid #e0e0e0', position: 'relative' }} 
+                            sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#f6f6f6', borderTop: '1px solid #e0e0e0', position: 'relative' }} 
                             elevation={0}
                         >
                             <Toolbar sx={{color: '#010101'}}>
@@ -63,7 +92,7 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                                         autoComplete='off'
                                         value={message}
                                         onChange={e => setMessage(e.target.value)}
-                                        placeholder='Escribe un mensaje aquí'
+                                        placeholder={intl.formatMessage({id: 'typeMessage'})}
                                         variant="standard"
                                         size='small' 
                                         sx={{
@@ -82,7 +111,12 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                                         }}
                                     />
                                     {message !== '' ? (
-                                        <IconButton>
+                                        <IconButton onClick={
+                                            () => {
+                                                handleSendMessage(user, idUser, message);
+                                                setMessage("");
+                                            }
+                                        }>
                                             <Send/>
                                         </IconButton>
                                     ) : (
@@ -105,7 +139,10 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                             Rooms Web
                         </Typography>
                         <Typography variant='body1' fontWeight={400}>
-                            Envía y recibe mensajes desde cualquier parte del mundo. ¿Qué esperas para iniciar un chat?
+                            <FormattedMessage 
+                                id="roomsWebDescription"
+                                defaultMessage="Send and receive messages from anywhere. What are you waiting for to start a chat?"
+                            />
                         </Typography>
                     </div>
                 </div>

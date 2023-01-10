@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 
 export interface User {
   id: string;
@@ -8,9 +9,9 @@ export interface User {
 }
 
 export interface Message {
-  id: string;
   content: any;
   read: boolean;
-  date: Date;
+  date: Timestamp;
   type: string;
+  userId: string;
 }

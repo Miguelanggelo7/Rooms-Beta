@@ -6,10 +6,13 @@ import { motion } from 'framer-motion';
 import { useUser } from "../hooks/useUser";
 import { updateUser } from "../api/user";
 import { User } from "../types";
+import { FormattedMessage, useIntl } from 'react-intl'; 
 
 export default function ProfileDrawer({ open, onOpen, onClose }: any) {
 
   const user = useUser()!;
+
+  const intl = useIntl();
 
   const [name, setName] = useState<string>(user.name);
   const [info, setInfo] = useState<string>(user.info);
@@ -62,7 +65,10 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
                 <ArrowBack/>
               </IconButton>
               <Typography variant="h6" sx={{fontWeight: '500', marginLeft: '20pt', color: '#fff'}}> 
-                Perfil
+                <FormattedMessage 
+                    id="profile"
+                    defaultMessage="Profile"
+                />
               </Typography>
             </div>
           </div>
@@ -85,7 +91,7 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
                 ease: [0, 0.71, 0.2, 1.01]
               }}
             >
-              <Avatar sx={{cursor: 'pointer', margin: 'auto', width: '200px', height: '200px'}} src={user.image ? user.image : ""} />
+              <Avatar imgProps={{ referrerPolicy: "no-referrer" }} sx={{cursor: 'pointer', margin: 'auto', width: '200px', height: '200px'}} src={user.image ? user.image : ""} />
             </motion.div>
           </div>
           <div style={{textAlign: 'center', marginTop: '10pt'}}>
@@ -95,7 +101,10 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
           </div>
           <div style={{width: '100%', marginTop: '20pt', backgroundColor: '#fff', boxShadow: '0 4px 2px -2px rgba(0,0,0,0.1)', padding: '10pt', paddingLeft: '30pt', paddingRight: '30pt'}}>
               <Typography variant="body2" color="primary">
-                Tu nombre
+                <FormattedMessage 
+                    id="yourName"
+                    defaultMessage="Your name"
+                />
               </Typography>
               <TextField
                 value={name}
@@ -123,17 +132,23 @@ export default function ProfileDrawer({ open, onOpen, onClose }: any) {
           </div>
           <div style={{textAlign: 'center', marginTop: '10pt'}}>
             <Typography variant="caption">
-              Este nombre será visible para tus contactos de Rooms.
+              <FormattedMessage 
+                    id="thisNameWillBeVisible"
+                    defaultMessage="This name will be visible to your Rooms contacts."
+                />
             </Typography>
           </div>
 
           <div style={{width: '100%', marginTop: '20pt', boxShadow: '0 4px 2px -2px rgba(0,0,0,0.1)', backgroundColor: '#fff', padding: '10pt', paddingLeft: '30pt', paddingRight: '30pt'}}>
               <Typography variant="body2" color="primary">
-                Información
+                <FormattedMessage 
+                    id="information"
+                    defaultMessage="Information"
+                />
               </Typography>
               <TextField
                 value={info}
-                placeholder="Escribe algo..."
+                placeholder={intl.formatMessage({id: 'typeSomething'})}
                 onChange={(e) => setInfo(e.target.value)}
                 variant="standard"
                 fullWidth

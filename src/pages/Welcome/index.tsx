@@ -5,16 +5,11 @@ import './welcome.scss';
 import logo from '../../assets/roomslogo.png';
 import banVideo from '../../assets/bannerVideo.mp4';
 import { Fade } from '@mui/material';
-// import useScrollPosition from '../../hooks/useScrollPosition';
+import { FormattedMessage } from 'react-intl'; 
 
 const Welcome = (): JSX.Element => {
 
   const [open, setOpen] = useState<boolean>(false);
-  // const scrollPosition = useScrollPosition();
-
-  // useEffect(() => {
-  //   console.log(scrollPosition);
-  // }, [scrollPosition]);
 
   return (
     <div>
@@ -29,24 +24,22 @@ const Welcome = (): JSX.Element => {
           whileHover={{scale: 1.05, backgroundColor: '#fff', color: "#010101"}}
           whileTap={{scale: 0.95}}
         >
-          Sign In
+          <FormattedMessage 
+            id="signIn"
+            defaultMessage="Sign In"
+          />
         </motion.button>
         <Fade in={true} timeout={1000}>
           <div className='text-banner'>
-            <p className='subtitle-banner'>Every chat has a story.</p>
+            <p className='subtitle-banner'>
+              <FormattedMessage 
+                id="slogan"
+                defaultMessage="Every chat has a story."
+              />
+            </p>
           </div>
         </Fade>
       </div>
-      {/* <Fade in={scrollPosition > 500} timeout={1000}>
-        <div className='block1'>
-          .
-        </div>
-      </Fade>
-      <Fade in={scrollPosition > 800} timeout={1000}>
-        <div className='block2'>
-          .
-        </div>
-      </Fade> */}
       <Login open={open} setOpen={setOpen}/>
     </div>
   );

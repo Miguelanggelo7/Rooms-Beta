@@ -15,11 +15,14 @@ import { signOut } from '../../api/auth';
 import Divider from '@mui/material/Divider';
 import { Badge, IconButton, InputAdornment, Popover, TextField, Typography, Tooltip } from '@mui/material';
 import { Clear, FilterList, Chat, MoreVertOutlined, Search } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProfileDrawer from '../ProfileDrawer';
 import { User } from '../../types';
 import AddContactDialog from '../AddContactDialog';
 import ProfileContactDrawer from '../ProfileContactDrawer';
+import { FormattedMessage, useIntl } from 'react-intl'; 
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../api/config';
 
 interface UserChat {
     idUser: User | null;
@@ -30,7 +33,24 @@ interface UserChat {
 
 const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserChat): JSX.Element => {
 
+    const [chats, setChats] = useState([]);
+
     const user = useUser()!;
+
+    useEffect(() => {
+        const getChats = () => {
+            const unsub = onSnapshot(doc(db, "userChats", user.id), (doc) => {
+                //@ts-ignore
+                setChats(doc.data());
+            });
+
+            return () => {
+                unsub();
+            };
+        };
+
+        user.id && getChats();
+    }, [user.id]);
 
     const [onFocusInput, setOnFocusInput] = useState<boolean>(false);
 
@@ -54,6 +74,12 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
 
     const openPopover = Boolean(anchorEl);
     const id = openPopover ? 'simple-popover' : undefined;
+
+    const intl = useIntl();
+
+    // const handleClickUser = async (id: string) => {
+    //     await getU
+    // }
   
     return (
         <>
@@ -80,8 +106,8 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
             >
                 <Toolbar>
                     <Stack direction="row" spacing={2} sx={{position: 'relative', width: '100%'}}>
-                        <Avatar sx={{cursor: 'pointer'}} src={user.image ? user.image : ""} onClick={() => setOpenDrawerProfile(true)} />
-                        <Tooltip title="Nuevo chat">
+                        <Avatar imgProps={{ referrerPolicy: "no-referrer" }} sx={{cursor: 'pointer'}} src={user.image ? user.image : ""} onClick={() => setOpenDrawerProfile(true)} />
+                        <Tooltip title={intl.formatMessage({id: 'newChat'})}>
                             <IconButton sx={{position: 'absolute', right: 50}} onClick={() => setOpenDialogContact(true)}>
                                 <Chat/>
                             </IconButton>
@@ -111,7 +137,7 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
                                 dense
                             >
                                 <ListItemButton onClick={signOut}>
-                                    <ListItemText primary={"Cerrar sesión"}/>
+                                    <ListItemText primary={intl.formatMessage({id: 'signOut'})}/>
                                 </ListItemButton>
                             </ListItem>
                         </List>
@@ -122,7 +148,7 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
                             autoComplete='off'
                             onFocus={() => setOnFocusInput(true)}
                             onBlur={() => setOnFocusInput(false)}
-                            placeholder='Busca un chat'
+                            placeholder={intl.formatMessage({id: 'searchChat'})}
                             variant="standard"
                             value={filterChat}
                             onChange={e => setFilterChat(e.target.value)}
@@ -168,30 +194,41 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
                 <Toolbar/>
                 <Toolbar/>
                 <Box sx={{ overflow: 'auto', border: 'none', marginTop: '-8px'}}>
-                    {/* <List>
-                        {['Jose', 'Juan', 'Send', 'Pedro','Alejandro', 'Miguelanggelo', 'Gustavo', 'Monica','Nahum', 'Charbel', 'Pipo', 'Alexis','Juanita', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts','Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <>
+                    <List>
+                        {/* @ts-ignore */}
+                        {Object.entries(chats)?.sort((a,b) => b[1].date?.toDate() - a[1].date?.toDate()).map((chat, index) => (
+                        <div key={index+""}>
                             <ListItem 
-                                key={text}
-                                onClick={() => setId(text)}
+                                // @ts-ignore
+                                onClick={() => setId(chat[1].userInfo)}
                                 disablePadding 
-                                sx={{position: 'relative', backgroundColor: idUser?.id === text ? "#eee" : ""}}
+                                // @ts-ignore
+                                sx={{position: 'relative', backgroundColor: idUser?.id === chat[1].userInfo.id ? "#eee" : ""}}
                             >
                                 <ListItemButton>
                                     <Typography variant='caption' sx={{position: 'absolute', right: 0, top: 0, margin: '10px'}}>
-                                        5:50 p. m.
+                                        {
+                                        // @ts-ignore
+                                        chat[1].date?.toDate().toJSON().slice(0,10).split('-').reverse().join('/') === (new Date).toJSON().slice(0,10).split('-').reverse().join('/') ?
+                                        // @ts-ignore
+                                        chat[1].date?.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) :
+                                        // @ts-ignore
+                                        chat[1].date?.toDate().toJSON().slice(0,10).split('-').reverse().join('/')
+                                        } 
                                     </Typography>
                                     <ListItemIcon>
-                                        <Avatar/>
+                                    {/* @ts-ignore */}
+                                    <Avatar imgProps={{ referrerPolicy: "no-referrer" }} src={chat[1].userInfo.image ? chat[1].userInfo.image : ""} />
                                     </ListItemIcon>
-                                    <ListItemText primary={text} secondary={"✓ " + text}/>
+                                    {/* @ts-ignore */}
+                                    <ListItemText primary={chat[1].userInfo.name} secondary={chat[1].lastMessageIdUser === user.id ? "✓ " + chat[1].lastMessage : chat[1].lastMessage}/>
                                     <Badge sx={{position: 'absolute', right: 0, bottom: 0, margin: '20px'}} badgeContent={4} color="error"/>
                                 </ListItemButton>
                             </ListItem>
                             <Divider sx={{backgroundColor: '#f6f6f6'}} variant="inset" component="li" />
-                        </>
+                        </div>
                         ))}
-                    </List> */}
+                    </List>
                 </Box>
             </Drawer>
         </>

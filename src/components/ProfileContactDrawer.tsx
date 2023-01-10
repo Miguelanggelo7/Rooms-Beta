@@ -2,8 +2,11 @@ import { ArrowBack } from "@mui/icons-material";
 import { IconButton, Typography, Avatar, TextField } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { motion } from 'framer-motion';
+import { FormattedMessage, useIntl } from 'react-intl'; 
 
 export default function ProfileContactDrawer({ open, onOpen, onClose, user }: any) {
+
+  const intl = useIntl();
 
   return (
     <>
@@ -23,7 +26,10 @@ export default function ProfileContactDrawer({ open, onOpen, onClose, user }: an
                 <ArrowBack/>
               </IconButton>
               <Typography variant="h6" sx={{fontWeight: '500', marginLeft: '20pt', color: '#fff'}}> 
-                Perfil
+                <FormattedMessage 
+                    id="profile"
+                    defaultMessage="Profile"
+                />
               </Typography>
             </div>
           </div>
@@ -46,20 +52,23 @@ export default function ProfileContactDrawer({ open, onOpen, onClose, user }: an
                 ease: [0, 0.71, 0.2, 1.01]
               }}
             >
-              <Avatar sx={{cursor: 'pointer', margin: 'auto', width: '200px', height: '200px'}} src={user.image ? user.image : ""} />
+              <Avatar imgProps={{ referrerPolicy: "no-referrer" }} sx={{cursor: 'pointer', margin: 'auto', width: '200px', height: '200px'}} src={user?.image ? user?.image : ""} />
             </motion.div>
           </div>
           <div style={{textAlign: 'center', marginTop: '10pt'}}>
             <Typography>
-              {user.email}
+              {user?.email}
             </Typography>
           </div>
           <div style={{width: '100%', marginTop: '20pt', backgroundColor: '#fff', boxShadow: '0 4px 2px -2px rgba(0,0,0,0.1)', padding: '10pt', paddingLeft: '30pt', paddingRight: '30pt'}}>
               <Typography variant="body2" color="primary">
-                Nombre
+                <FormattedMessage 
+                    id="name"
+                    defaultMessage="Name"
+                />
               </Typography>
               <TextField
-                value={user.name || ""}
+                value={user?.name || ""}
                 variant="standard"
                 fullWidth
                 disabled
@@ -78,10 +87,13 @@ export default function ProfileContactDrawer({ open, onOpen, onClose, user }: an
 
           <div style={{width: '100%', marginTop: '20pt', boxShadow: '0 4px 2px -2px rgba(0,0,0,0.1)', backgroundColor: '#fff', padding: '10pt', paddingLeft: '30pt', paddingRight: '30pt'}}>
               <Typography variant="body2" color="primary">
-                Información
+                <FormattedMessage 
+                    id="information"
+                    defaultMessage="Information"
+                />
               </Typography>
               <TextField
-                value={user.info || "Este usuario no tiene información"}
+                value={user?.info || intl.formatMessage({id: 'doesntHaveInfo'})}
                 variant="standard"
                 fullWidth
                 disabled
@@ -91,7 +103,7 @@ export default function ProfileContactDrawer({ open, onOpen, onClose, user }: an
                 sx={{
                   marginTop: '20pt',
                   "& .MuiInputBase-input.Mui-disabled": {
-                    WebkitTextFillColor: user.info ? "#000000" : "#bbb",
+                    WebkitTextFillColor: user?.info ? "#000000" : "#bbb",
                     borderBottom: 'none',
                   },
                 }}

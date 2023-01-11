@@ -80,6 +80,18 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
     // const handleClickUser = async (id: string) => {
     //     await getU
     // }
+
+    function padTo2Digits(num: any) {
+        return num.toString().padStart(2, '0');
+      }
+      
+      function formatDate(date: any) {
+        return [
+          padTo2Digits(date.getDate()),
+          padTo2Digits(date.getMonth() + 1),
+          date.getFullYear(),
+        ].join('/');
+      }
   
     return (
         <>
@@ -209,11 +221,11 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
                                     <Typography variant='caption' sx={{position: 'absolute', right: 0, top: 0, margin: '10px'}}>
                                         {
                                         // @ts-ignore
-                                        chat[1].date?.toDate().toJSON().slice(0,10).split('-').reverse().join('/') === (new Date).toJSON().slice(0,10).split('-').reverse().join('/') ?
+                                        formatDate(chat[1].date?.toDate()) === formatDate((new Date)) ?
                                         // @ts-ignore
                                         chat[1].date?.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) :
                                         // @ts-ignore
-                                        chat[1].date?.toDate().toJSON().slice(0,10).split('-').reverse().join('/')
+                                        formatDate(chat[1].date?.toDate())
                                         } 
                                     </Typography>
                                     <ListItemIcon>

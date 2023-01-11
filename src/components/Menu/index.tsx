@@ -40,7 +40,7 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
     useEffect(() => {
         const getChats = () => {
             const unsub = onSnapshot(doc(db, "userChats", user.id), (doc) => {
-                //@ts-ignore
+                //@ts-ignore 
                 setChats(doc.data());
             });
 
@@ -50,7 +50,7 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
         };
 
         user.id && getChats();
-    }, [user.id]);
+    }, []);
 
     const [onFocusInput, setOnFocusInput] = useState<boolean>(false);
 
@@ -218,16 +218,25 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
                                 sx={{position: 'relative', backgroundColor: idUser?.id === chat[1].userInfo.id ? "#eee" : ""}}
                             >
                                 <ListItemButton>
-                                    <Typography variant='caption' sx={{position: 'absolute', right: 0, top: 0, margin: '10px'}}>
-                                        {
-                                        // @ts-ignore
-                                        formatDate(chat[1].date?.toDate()) === formatDate((new Date)) ?
-                                        // @ts-ignore
-                                        chat[1].date?.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) :
-                                        // @ts-ignore
-                                        formatDate(chat[1].date?.toDate())
-                                        } 
-                                    </Typography>
+                                    {/* @ts-ignore */}
+                                    { chat[1].date ? (
+                                        <Typography variant='caption' sx={{position: 'absolute', right: 0, top: 0, margin: '10px'}}>
+                                            {
+                                            // @ts-ignore
+                                            formatDate(chat[1].date?.toDate()) === formatDate((new Date)) ?
+                                            // @ts-ignore
+                                            chat[1].date?.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) :
+                                            // @ts-ignore
+                                            formatDate(chat[1].date?.toDate())
+                                            } 
+                                        </Typography>
+                                    ) : (
+                                        <Typography variant='caption' sx={{position: 'absolute', right: 0, top: 0, margin: '10px'}}>
+                                            {
+                                            (new Date).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+                                            } 
+                                        </Typography>
+                                    )}
                                     <ListItemIcon>
                                     {/* @ts-ignore */}
                                     <Avatar imgProps={{ referrerPolicy: "no-referrer" }} src={chat[1].userInfo.image ? chat[1].userInfo.image : ""} />

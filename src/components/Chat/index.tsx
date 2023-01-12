@@ -2,13 +2,14 @@ import { Mic, MoreVertOutlined, Send } from '@mui/icons-material';
 import { AppBar, Avatar, IconButton, Stack, Toolbar, Typography, Box, TextField } from '@mui/material';
 import Lottie from 'react-lottie';
 import './chat.scss';
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { User } from '../../types';
 import { FormattedMessage, useIntl } from 'react-intl'; 
 import { handleSendMessage } from '../../api/chat';
 import { useUser } from '../../hooks/useUser';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../api/config';
+import Message from '../Message';
 
 interface UserChat {
     idUser: User | null;
@@ -21,8 +22,33 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
 
     const [chat, setChat] = useState();
 
+    function padTo2Digits(num: any) {
+        return num.toString().padStart(2, '0');
+      }
+      
+      function formatDate(date: any) {
+        return [
+          padTo2Digits(date.getDate()),
+          padTo2Digits(date.getMonth() + 1),
+          date.getFullYear(),
+        ].join('/');
+      }
+
+    const [datesMessages, setDatesMessages] = useState([]);
+
+    const isNewDate = (date: any) => {
+        //@ts-ignore
+        if (datesMessages.includes(formatDate(date.toDate()))) {
+            return false;
+        } else {
+            //@ts-ignore
+            setDatesMessages([...datesMessages, formatDate(date.toDate())])
+        }
+    }
+
     useEffect(() => {
         setMessage('');
+        setDatesMessages([]);
         
         const getChat = () => {
             //@ts-ignore
@@ -76,10 +102,13 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                     </AppBar>
                     <div className='cont-messages'>
                         {/* @ts-ignore */}
-                        {chat?.messages.map((message, index) => (
-                            <h1 key={index+""}>{message.content}</h1>
+                        {chat && chat?.messages.map((message, index) => (
+                            <div key={index + ""} style={ user.id === message.userId ? { alignSelf: 'flex-start', maxWidth: '40%'} : { alignSelf: 'flex-end', maxWidth: '40%'}}>
+                                <Message message={message}/>
+                            </div>
                         ))}
                     </div>
+                    <div style={{backgroundColor: '#efeae2', height: '30pt', marginTop: '-15pt'}}/>
                     <div style={{position: 'absolute', bottom: 0, width: '100%'}}>
                         <AppBar 
                             position='fixed'
@@ -120,7 +149,7 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                                             <Send/>
                                         </IconButton>
                                     ) : (
-                                        <IconButton>
+                                        <IconButton onClick={() => console.log(chat)}>
                                             <Mic/>
                                         </IconButton>
                                     )}

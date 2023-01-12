@@ -28,5 +28,6 @@
   "doesntHaveInfo" : "This user has no information",
   "yourName" : "Your name",
   "thisNameWillBeVisible" : "This name will be visible to your Rooms contacts.",
-  "typeSomething" : "Type something..."
+  "typeSomething" : "Type something...",
+  "today" : "Today"
 }

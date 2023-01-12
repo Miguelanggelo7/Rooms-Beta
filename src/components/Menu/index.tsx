@@ -50,7 +50,7 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
         };
 
         user.id && getChats();
-    }, []);
+    }, [user.id]);
 
     const [onFocusInput, setOnFocusInput] = useState<boolean>(false);
 
@@ -76,10 +76,6 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
     const id = openPopover ? 'simple-popover' : undefined;
 
     const intl = useIntl();
-
-    // const handleClickUser = async (id: string) => {
-    //     await getU
-    // }
 
     function padTo2Digits(num: any) {
         return num.toString().padStart(2, '0');
@@ -208,7 +204,7 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
                 <Box sx={{ overflow: 'auto', border: 'none', marginTop: '-8px'}}>
                     <List>
                         {/* @ts-ignore */}
-                        {Object.entries(chats)?.sort((a,b) => b[1].date?.toDate() - a[1].date?.toDate()).map((chat, index) => (
+                        {chats && Object.entries(chats)?.sort((a,b) => b[1].date?.toDate() - a[1].date?.toDate()).map((chat, index) => (
                         <div key={index+""}>
                             <ListItem 
                                 // @ts-ignore
@@ -242,7 +238,25 @@ const Menu = ({idUser, setId, openProfileContact, setOpenProfileContact}: UserCh
                                     <Avatar imgProps={{ referrerPolicy: "no-referrer" }} src={chat[1].userInfo.image ? chat[1].userInfo.image : ""} />
                                     </ListItemIcon>
                                     {/* @ts-ignore */}
-                                    <ListItemText primary={chat[1].userInfo.name} secondary={chat[1].lastMessageIdUser === user.id ? "✓ " + chat[1].lastMessage : chat[1].lastMessage}/>
+                                    <ListItemText primary={chat[1].userInfo.name} secondary={chat[1].lastMessageIdUser === user.id ? "✓ " + chat[1].lastMessage : chat[1].lastMessage}
+                                        sx={{
+                                            maxWidth: 260
+                                        }}
+                                        primaryTypographyProps={{
+                                            style: {
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis'
+                                            }
+                                        }}
+                                        secondaryTypographyProps={{
+                                            style: {
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis'
+                                            }
+                                        }}
+                                    />
                                     <Badge sx={{position: 'absolute', right: 0, bottom: 0, margin: '20px'}} badgeContent={4} color="error"/>
                                 </ListItemButton>
                             </ListItem>

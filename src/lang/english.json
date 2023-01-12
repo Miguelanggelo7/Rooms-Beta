@@ -29,5 +29,6 @@
   "yourName" : "Your name",
   "thisNameWillBeVisible" : "This name will be visible to your Rooms contacts.",
   "typeSomething" : "Type something...",
-  "today" : "Today"
+  "today" : "Today",
+  "yourMessagesAreProtected" : "The messages you send through Rooms are protected."
 }

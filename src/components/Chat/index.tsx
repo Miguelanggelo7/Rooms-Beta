@@ -2,7 +2,7 @@ import { Mic, MoreVertOutlined, Send } from '@mui/icons-material';
 import { AppBar, Avatar, IconButton, Stack, Toolbar, Typography, Box, TextField } from '@mui/material';
 import Lottie from 'react-lottie';
 import './chat.scss';
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState, Fragment, useRef } from "react";
 import { User } from '../../types';
 import { FormattedMessage, useIntl } from 'react-intl'; 
 import { handleSendMessage } from '../../api/chat';
@@ -65,6 +65,8 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
       const [message, setMessage] = useState<string>('');
 
       const intl = useIntl();
+      
+      const contMessages = useRef() as React.MutableRefObject<HTMLInputElement>;;
   
     return (
         <div>
@@ -90,12 +92,19 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                     <div className='cont-messages'>
                         {/* @ts-ignore */}
                         {chat && chat?.messages.map((message, index) => (
-                            <div key={index + ""} style={ user.id === message.userId ? { alignSelf: 'flex-start', maxWidth: '40%'} : { alignSelf: 'flex-end', maxWidth: '40%'}}>
+                            <div key={index + ""} style={ user.id !== message.userId ? { alignSelf: 'flex-start', maxWidth: '45%'} : { alignSelf: 'flex-end', maxWidth: '45%'}}>
                                 <Message message={message}/>
                             </div>
                         ))}
+                        <div ref={contMessages} style={{paddingBottom: '15pt'}}>
+                            <Typography variant="body2" textAlign={"center"} color="grayText" sx={{marginTop: '30pt', marginBottom: '-30pt'}}>
+                                <FormattedMessage 
+                                    id="yourMessagesAreProtected"
+                                    defaultMessage="The messages you send through Rooms are protected."
+                                />
+                            </Typography>
+                        </div>
                     </div>
-                    <div style={{backgroundColor: '#efeae2', height: '30pt', marginTop: '-15pt'}}/>
                     <div style={{position: 'absolute', bottom: 0, width: '100%'}}>
                         <AppBar 
                             position='fixed'
@@ -108,6 +117,14 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                                         autoComplete='off'
                                         value={message}
                                         onChange={e => setMessage(e.target.value)}
+                                        onKeyPress={(ev) => {
+                                            if (ev.key === 'Enter') {
+                                                handleSendMessage(user, idUser, message);
+                                                setMessage("");
+                                                contMessages.current.scrollIntoView({ behavior: 'smooth' })
+                                                ev.preventDefault();
+                                            }
+                                        }}
                                         placeholder={intl.formatMessage({id: 'typeMessage'})}
                                         variant="standard"
                                         size='small' 
@@ -131,6 +148,7 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
                                             () => {
                                                 handleSendMessage(user, idUser, message);
                                                 setMessage("");
+                                                contMessages.current.scrollIntoView({ behavior: "smooth" });
                                             }
                                         }>
                                             <Send/>

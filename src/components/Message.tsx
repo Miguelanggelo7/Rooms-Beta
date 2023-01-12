@@ -18,7 +18,7 @@ export default function Message({message}: any) {
   }
 
   return (
-    <Card elevation={1} sx={ user.id === message.userId ? {backgroundColor: "#fff", margin: 0.5, marginTop: 0.5, marginLeft: 5, minWidth: 80} : {backgroundColor: '#f3d9ff', margin: 1, marginRight: 5, marginTop: 0.5, minWidth: 80}}>
+    <Card elevation={1} sx={ user.id !== message.userId ? {backgroundColor: "#fff", margin: 0.5, marginTop: 0.5, marginLeft: 5, minWidth: 80} : {backgroundColor: '#f3d9ff', margin: 1, marginRight: 5, marginTop: 0.5, minWidth: 80}}>
       <div style={{paddingRight: 15, paddingBottom: 20, paddingLeft: 10, paddingTop: 10, position: 'relative'}}>
         <Typography 
           sx={{ wordWrap: "break-word" }}

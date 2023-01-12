@@ -34,21 +34,8 @@ const Chat = ({idUser, setOpenProfileContact}: UserChat): JSX.Element => {
         ].join('/');
       }
 
-    const [datesMessages, setDatesMessages] = useState([]);
-
-    const isNewDate = (date: any) => {
-        //@ts-ignore
-        if (datesMessages.includes(formatDate(date.toDate()))) {
-            return false;
-        } else {
-            //@ts-ignore
-            setDatesMessages([...datesMessages, formatDate(date.toDate())])
-        }
-    }
-
     useEffect(() => {
         setMessage('');
-        setDatesMessages([]);
         
         const getChat = () => {
             //@ts-ignore
